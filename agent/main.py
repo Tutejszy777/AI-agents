@@ -1,4 +1,4 @@
-from langchain.core.messages import HumanMessage # high level framework to build LLM applications
+from langchain_core.messages import HumanMessage # high level framework to build LLM applications
 from langchain_openai import ChatOpenAI # allows to use OpenAI's LLMs within LangChain & langgraph
 from langchain.tools import tool
 from langgraph.prebuilt import create_react_agent # complex framework to build AI agents
@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def main():
-    model = ChatOpenAi(temperature=0)
+    model = ChatOpenAI(temperature=0)
 
     tools = []
     agent_executor = create_react_agent(model, tools)
@@ -22,6 +22,16 @@ def main():
         if user_input.lower() == "exit":
             break
 
-        print("\nAssistant")
-
+        print("\nAssistant: ", end="")
+        for chunk in agent_executor.stream(
+            {"messages": [HumanMessage(content=user_input)]}
+        ):
+            if "agent" in chunk and "messages" in chunk["agent"]:
+                for message in chunk["agent"]["messages"]:
+                    print(message.content, end="")
         
+        print()
+
+if __name__ == "__main__":
+    main()
+
