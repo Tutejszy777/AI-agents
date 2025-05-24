@@ -8,10 +8,32 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+@tool
+def  addition(a: float,b: float) -> str:
+    """Useful for performing addition."""
+    return f"The sum of {a} and {b} is {a + b}." 
+
+@tool
+def subtraction(a: float, b: float) -> str:
+    """Useful for performing subtraction."""
+    return f"The difference between {a} and {b} is {a - b}."
+
+@tool
+def multiplication(a: float, b: float) -> str:
+    """Useful for performing multiplication."""
+    return f"The product of {a} and {b} is {a * b}."
+
+@tool
+def division(a: float, b: float) -> str:
+    """Useful for performing division."""
+    if b == 0:
+        return "Error: Division by zero is not allowed."
+    return f"The quotient of {a} and {b} is {a / b}."
+
 def main():
     model = ChatOpenAI(temperature=0)
 
-    tools = []
+    tools = [addition, subtraction, multiplication, division]
     agent_executor = create_react_agent(model, tools)
 
     print("Welcome to the AI agent. Type 'exit' to quit.")
